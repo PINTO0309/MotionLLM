@@ -2,51 +2,51 @@
 
 ![task](./assets/task.gif)
 
-[Ling-Hao Chen](https://lhchen.top)<sup>😎 1, 3</sup>, 
-[Shunlin Lu](https://shunlinlu.github.io)<sup>😎 2, 3</sup>, 
-[Ailing Zeng](https://ailingzeng.sit)<sup>3</sup>, 
-[Hao Zhang](https://haozhang534.github.io/)<sup>3, 4</sup>, 
-[Benyou Wang](https://wabyking.github.io/old.html)<sup>2</sup>, 
-[Ruimao Zhang](http://zhangruimao.site)<sup>2</sup>, 
+[Ling-Hao Chen](https://lhchen.top)<sup>😎 1, 3</sup>,
+[Shunlin Lu](https://shunlinlu.github.io)<sup>😎 2, 3</sup>,
+[Ailing Zeng](https://ailingzeng.sit)<sup>3</sup>,
+[Hao Zhang](https://haozhang534.github.io/)<sup>3, 4</sup>,
+[Benyou Wang](https://wabyking.github.io/old.html)<sup>2</sup>,
+[Ruimao Zhang](http://zhangruimao.site)<sup>2</sup>,
 [Lei Zhang](https://leizhang.org)<sup>🤗 3</sup>
 
-<sup>😎</sup>Co-first author. Listing order is random. 
+<sup>😎</sup>Co-first author. Listing order is random.
 <sup>🤗</sup>Corresponding author.
 
-<sup>1</sup>Tsinghua University, 
-<sup>2</sup>School of Data Science, The Chinese University of Hong Kong, Shenzhen (CUHK-SZ), 
+<sup>1</sup>Tsinghua University,
+<sup>2</sup>School of Data Science, The Chinese University of Hong Kong, Shenzhen (CUHK-SZ),
 <sup>3</sup>International Digital Economy Academy (IDEA),
 <sup>4</sup>The Hong Kong University of Science and Technology
 
 <p align="center">
   <a href='https://arxiv.org/abs/2405.20340'>
   <img src='https://img.shields.io/badge/Arxiv-2405.20340-A42C25?style=flat&logo=arXiv&logoColor=A42C25'>
-  </a> 
+  </a>
   <a href='https://arxiv.org/pdf/2405.20340.pdf'>
   <img src='https://img.shields.io/badge/Paper-PDF-yellow?style=flat&logo=arXiv&logoColor=yellow'>
-  </a> 
+  </a>
   <a href='https://lhchen.top/MotionLLM'>
-  <img src='https://img.shields.io/badge/Project-Page-%23df5b46?style=flat&logo=Google%20chrome&logoColor=%23df5b46'></a> 
+  <img src='https://img.shields.io/badge/Project-Page-%23df5b46?style=flat&logo=Google%20chrome&logoColor=%23df5b46'></a>
   <a href='https://research.lhchen.top/blogpost/motionllm'>
     <img src='https://img.shields.io/badge/Blog-post-4EABE6?style=flat&logoColor=4EABE6'></a>
   <a href='https://github.com/IDEA-Research/MotionLLM'>
-  <img src='https://img.shields.io/badge/GitHub-Code-black?style=flat&logo=github&logoColor=white'></a> 
+  <img src='https://img.shields.io/badge/GitHub-Code-black?style=flat&logo=github&logoColor=white'></a>
   <a href='http://demo.humotionx.com/'>
   <img src='https://img.shields.io/badge/gradio-demo-red.svg'>
-  </a> 
+  </a>
   <a href='LICENSE'>
   <img src='https://img.shields.io/badge/License-IDEA-blue.svg'>
-  </a> 
+  </a>
   <a href="" target='_blank'>
   <img src="https://visitor-badge.laobi.icu/badge?page_id=IDEA-Research.MotionLLM&left_color=gray&right_color=%2342b983">
-  </a> 
+  </a>
 </p>
 
 # 📰 News
 
 - **[2024-06-17]: MoVid dataset Video data is now available at [HuggingFace](https://huggingface.co/datasets/EvanTHU/MoVid). Have a quick view on our data [here](https://huggingface.co/spaces/EvanTHU/Movid-vis).**
 - **[2024-06-11]: CLI mode is supported. MotionLLM is running on A100 GPU on 🤗[HuggingFace demo](https://huggingface.co/spaces/EvanTHU/MotionLLM) (Posts on [Twitter](https://twitter.com/Gradio/status/1800434110873096663)).**
-- **[2024-05-31]: Paper, demo, and codes are released (Posts on [Twitter](https://twitter.com/Evan_THU/status/1796380129280844193)).** 
+- **[2024-05-31]: Paper, demo, and codes are released (Posts on [Twitter](https://twitter.com/Evan_THU/status/1796380129280844193)).**
 
 # 🤩 Abstract
 
@@ -67,7 +67,8 @@ We provide a simple online [demo](https://demo.humotionx.com/) for you to try Mo
 ### Step 1: Set up the environment
 
 ```bash
-pip install -r requirements.txt
+uv sync --extra-index-url https://download.pytorch.org/whl/cu128
+source .venv/bin/activate
 ```
 
 ### Step 2: Download the pre-trained model
@@ -76,8 +77,11 @@ pip install -r requirements.txt
 <details>
   <summary><b> 2.1 Download the LLM </b></summary>
 
-Please follow the instruction of [Lit-GPT](https://github.com/Lightning-AI/litgpt) to prepare the LLM model (vicuna 1.5-7B). These files will be: 
+Please follow the instruction of [Lit-GPT](https://github.com/Lightning-AI/litgpt) to prepare the LLM model (vicuna 1.5-7B). These files will be:
 ```bash
+MPLBACKEND=Agg litgpt download lmsys/vicuna-7b-v1.5 --model_name Llama-2-7b-hf
+mv ./checkpoints/lmsys/vicuna-7b-v1.5/config.json ./checkpoints/lmsys/vicuna-7b-v1.5/lit_config.json
+
 ./checkpoints/vicuna-7b-v1.5
 ├── generation_config.json
 ├── lit_config.json
@@ -98,7 +102,7 @@ If you have any confusion, we will update a more detailed instruction in couple 
 <details>
   <summary><b> 2.2 Dowload the LoRA and the projection layer of the MotionLLM </b></summary>
 
-We now release one versions of the MotionLLM checkpoints, namely `v1.0` (download [here](https://drive.google.com/drive/folders/1d_5vaL34Hs2z9ACcMXyPEfZNyMs36xKx?usp=sharing)). Opening for the suggestions to Ling-Hao Chen and Shunlin Lu. 
+We now release one versions of the MotionLLM checkpoints, namely `v1.0` (download [here](https://drive.google.com/drive/folders/1d_5vaL34Hs2z9ACcMXyPEfZNyMs36xKx?usp=sharing)). Opening for the suggestions to Ling-Hao Chen and Shunlin Lu.
 
 ```bash
 wget xxx
@@ -107,7 +111,7 @@ Keep them in a folder named and remember the path (`LINEAR_V` and `LORA`).
 
 </details>
 
-### 2.3 Run the demo 
+### 2.3 Run the demo
 
 <details>
   <summary><b> Choice 1: gradio demo </b></summary>
@@ -136,13 +140,13 @@ We also provide a CLI demo for you to try the MotionLLM. You can run the followi
 python cli.py --lora_path $LORA --mlp_path $LINEAR_V
 ```
 
-During inference, you can input the video path and your question to get the answer. 
+During inference, you can input the video path and your question to get the answer.
 ```bash
 # Example here
 Input video path: xxx.mp4
 Your question: what xxx ?
 ================================
-The man plan to xxx. 
+The man plan to xxx.
 ================================
 ```
 </details>
@@ -160,7 +164,7 @@ The man plan to xxx.
 ## 💋 Acknowledgement
 
 
-The author team would like to deliver many thanks to many people. Qing Jiang helps a lot with some parts of manual annotation on MoVid Bench and resolves some ethics issues of MotionLLM. Jingcheng Hu provided some technical suggestions for efficient training. Shilong Liu and Bojia Zi provided some significant technical suggestions on LLM tuning. Jiale Liu, Wenhao Yang, and Chenlai Qian provided some significant suggestions for us to polish the paper. Hongyang Li helped us a lot with the figure design. Yiren Pang provided GPT API keys when our keys were temporarily out of quota. The code is on the basis of [Video-LLaVA](https://github.com/PKU-YuanGroup/Video-LLaVA), [HumanTOMATO](https://lhchen.top/HumanTOMATO/), [MotionGPT](https://github.com/qiqiApink/MotionGPT). [lit-gpt](https://github.com/Lightning-AI/litgpt), and [HumanML3D](https://github.com/EricGuo5513/HumanML3D). Thanks to all contributors! 
+The author team would like to deliver many thanks to many people. Qing Jiang helps a lot with some parts of manual annotation on MoVid Bench and resolves some ethics issues of MotionLLM. Jingcheng Hu provided some technical suggestions for efficient training. Shilong Liu and Bojia Zi provided some significant technical suggestions on LLM tuning. Jiale Liu, Wenhao Yang, and Chenlai Qian provided some significant suggestions for us to polish the paper. Hongyang Li helped us a lot with the figure design. Yiren Pang provided GPT API keys when our keys were temporarily out of quota. The code is on the basis of [Video-LLaVA](https://github.com/PKU-YuanGroup/Video-LLaVA), [HumanTOMATO](https://lhchen.top/HumanTOMATO/), [MotionGPT](https://github.com/qiqiApink/MotionGPT). [lit-gpt](https://github.com/Lightning-AI/litgpt), and [HumanML3D](https://github.com/EricGuo5513/HumanML3D). Thanks to all contributors!
 
 
 ## 📚 License
