@@ -105,7 +105,9 @@ If you have any confusion, we will update a more detailed instruction in couple 
 We now release one versions of the MotionLLM checkpoints, namely `v1.0` (download [here](https://drive.google.com/drive/folders/1d_5vaL34Hs2z9ACcMXyPEfZNyMs36xKx?usp=sharing)). Opening for the suggestions to Ling-Hao Chen and Shunlin Lu.
 
 ```bash
-wget xxx
+mkdir -p checkpoints/LORA && mkdir -p checkpoints/LINEAR_V
+wget -P checkpoints/LORA https://github.com/PINTO0309/MotionLLM/releases/download/v1.0/iter-015000-ckpt.pth
+wget -P checkpoints/LINEAR_V https://github.com/PINTO0309/MotionLLM/releases/download/v1.0/linear-iter-015000-ckpt.pth
 ```
 Keep them in a folder named and remember the path (`LINEAR_V` and `LORA`).
 
@@ -117,6 +119,8 @@ Keep them in a folder named and remember the path (`LINEAR_V` and `LORA`).
   <summary><b> Choice 1: gradio demo </b></summary>
 
 ```bash
+LORA=checkpoints/LORA/iter-015000-ckpt.pth
+LINEAR_V=checkpoints/LINEAR_V/linear-iter-015000-ckpt.pth
 GRADIO_TEMP_DIR=temp python app.py --lora_path $LORA --mlp_path $LINEAR_V
 ```
 If you have some error in downloading the huggingface model, you can try the following command with the mirror of huggingface.
