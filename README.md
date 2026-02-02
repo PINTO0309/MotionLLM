@@ -93,23 +93,16 @@ mv ./checkpoints/lmsys/vicuna-7b-v1.5/config.json ./checkpoints/lmsys/vicuna-7b-
 └── tokenizer.model
 ```
 
-For how to get `lit_model.pth`, please refer to [issue 9](https://github.com/IDEA-Research/MotionLLM/issues/9).
-
-If you have any confusion, we will update a more detailed instruction in couple of days.
-
 </details>
 
 <details>
   <summary><b> 2.2 Dowload the LoRA and the projection layer of the MotionLLM </b></summary>
-
-We now release one versions of the MotionLLM checkpoints, namely `v1.0` (download [here](https://drive.google.com/drive/folders/1d_5vaL34Hs2z9ACcMXyPEfZNyMs36xKx?usp=sharing)). Opening for the suggestions to Ling-Hao Chen and Shunlin Lu.
 
 ```bash
 mkdir -p checkpoints/LORA && mkdir -p checkpoints/LINEAR_V
 wget -P checkpoints/LORA https://github.com/PINTO0309/MotionLLM/releases/download/v1.0/iter-015000-ckpt.pth
 wget -P checkpoints/LINEAR_V https://github.com/PINTO0309/MotionLLM/releases/download/v1.0/linear-iter-015000-ckpt.pth
 ```
-Keep them in a folder named and remember the path (`LINEAR_V` and `LORA`).
 
 </details>
 
@@ -141,6 +134,8 @@ After thiess, you can open the browser and visit the local host via the command 
 We also provide a CLI demo for you to try the MotionLLM. You can run the following command to try the MotionLLM.
 
 ```bash
+LORA=checkpoints/LORA/iter-015000-ckpt.pth
+LINEAR_V=checkpoints/LINEAR_V/linear-iter-015000-ckpt.pth
 python cli.py --lora_path $LORA --mlp_path $LINEAR_V
 ```
 
