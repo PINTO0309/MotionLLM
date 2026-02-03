@@ -548,6 +548,20 @@ pretrained_llm_checkpoint = lazy_load(pretrained_llm_path)
 lora_checkpoint = lazy_load(lora_path)
 # 3. merge the two checkpoints
 model_state_dict = {**pretrained_llm_checkpoint, **lora_checkpoint}
+
+def _remap_qkv_keys(state_dict: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
+    """Map legacy qkv naming to current LoRA attention naming."""
+    remaps: Dict[str, str] = {}
+    for key in state_dict.keys():
+        if key.endswith(".attn.qkv.weight"):
+            remaps[key] = key.replace(".attn.qkv.weight", ".attn.attn.linear.weight")
+        elif key.endswith(".attn.qkv.bias"):
+            remaps[key] = key.replace(".attn.qkv.bias", ".attn.attn.linear.bias")
+    for old_key, new_key in remaps.items():
+        state_dict[new_key] = state_dict.pop(old_key)
+    return state_dict
+
+model_state_dict = _remap_qkv_keys(model_state_dict)
 model.load_state_dict(model_state_dict, strict=True)
 print('Load llm base model from', pretrained_llm_path)
 print('Load lora model from', lora_path)
