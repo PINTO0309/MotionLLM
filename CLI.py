@@ -301,7 +301,10 @@ def main(
     while True:
 
         input_video_path = input("\033[0;34;40m Input video path: \033[0m")
+        print(f"[1/3] Loading and preprocessing video: {input_video_path}", file=sys.stderr)
+        t_video = time.perf_counter()
         video_tensor = video_processor(input_video_path, return_tensors='pt')['pixel_values']
+        print(f"[1/3] Done in {time.perf_counter() - t_video:.2f}s", file=sys.stderr)
 
         if type(video_tensor) is list:
             tensor = [video.to('cuda', dtype=torch.float16) for video in video_tensor]
@@ -310,7 +313,10 @@ def main(
 
         X_modalities = [tensor,['video']]
 
+        print("[2/3] Extracting video features...", file=sys.stderr)
+        t_feat = time.perf_counter()
         video_feature = mm_backbone_mlp_model.get_multimodal_embeddings(X_modalities)
+        print(f"[2/3] Done in {time.perf_counter() - t_feat:.2f}s", file=sys.stderr)
 
         prompt = input("\033[0;34;40m Your question: \033[0m")
         sample = {"instruction": prompt, "input": input_video_path}
@@ -322,6 +328,7 @@ def main(
         encoded = (prompt[0], video_feature[0], tokenizer.encode(prompt[1], bos=False, eos=False, device=model.device).view(1, -1))
 
         
+        print("[3/3] Generating response...", file=sys.stderr)
         t0 = time.perf_counter()
             
         output_seq = generate(
@@ -336,6 +343,7 @@ def main(
         )
         outputfull = tokenizer.decode(output_seq)
         output = outputfull.split("ASSISTANT:")[-1].strip()
+        print(f"[3/3] Done in {time.perf_counter() - t0:.2f}s", file=sys.stderr)
         print("================================")
         print("Model output", output)
         print("================================")
