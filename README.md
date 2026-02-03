@@ -136,7 +136,7 @@ We also provide a CLI demo for you to try the MotionLLM. You can run the followi
 ```bash
 LORA=checkpoints/LORA/iter-015000-ckpt.pth
 LINEAR_V=checkpoints/LINEAR_V/linear-iter-015000-ckpt.pth
-python CLI.py --lora_path $LORA --mlp_path $LINEAR_V
+MPLBACKEND=Agg python CLI.py --lora_path $LORA --mlp_path $LINEAR_V
 ```
 
 During inference, you can input the video path and your question to get the answer.
