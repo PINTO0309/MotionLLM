@@ -114,7 +114,7 @@ wget -P checkpoints/LINEAR_V https://github.com/PINTO0309/MotionLLM/releases/dow
 ```bash
 LORA=checkpoints/LORA/iter-015000-ckpt.pth
 LINEAR_V=checkpoints/LINEAR_V/linear-iter-015000-ckpt.pth
-GRADIO_TEMP_DIR=temp python app.py --lora_path $LORA --mlp_path $LINEAR_V
+MPLBACKEND=Agg GRADIO_TEMP_DIR=temp python app.py --lora_path $LORA --mlp_path $LINEAR_V
 ```
 If you have some error in downloading the huggingface model, you can try the following command with the mirror of huggingface.
 ```bash
