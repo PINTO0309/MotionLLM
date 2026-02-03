@@ -1,4 +1,7 @@
 
+import sys
+import types
+
 import torch
 import cv2
 import decord
@@ -9,6 +12,22 @@ from PIL import Image
 from torchvision import transforms
 from transformers import ProcessorMixin, BatchEncoding
 from transformers.image_processing_utils import BatchFeature
+
+# pytorchvideo 0.1.5 expects torchvision.transforms.functional_tensor, which is
+# removed in newer torchvision releases. Provide a lightweight compatibility
+# alias to keep the import path working.
+try:
+    import torchvision.transforms.functional_tensor  # noqa: F401
+except Exception:  # pragma: no cover - import-time compatibility shim
+    try:
+        from torchvision.transforms import functional as _tv_functional
+    except Exception:
+        _tv_functional = None
+    if _tv_functional is not None:
+        _compat_module = types.ModuleType("torchvision.transforms.functional_tensor")
+        _compat_module.__dict__.update(_tv_functional.__dict__)
+        sys.modules["torchvision.transforms.functional_tensor"] = _compat_module
+
 from pytorchvideo.data.encoded_video import EncodedVideo
 from torchvision.transforms import Compose, Lambda, ToTensor
 from torchvision.transforms._transforms_video import NormalizeVideo, RandomCropVideo, RandomHorizontalFlipVideo, CenterCropVideo
