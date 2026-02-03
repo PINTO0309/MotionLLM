@@ -103,6 +103,8 @@ class CLIPTextConfig(PretrainedConfig):
         self.initializer_factor = initializer_factor
         self.attention_dropout = attention_dropout
         self.add_time_attn = False  ######################################
+        if getattr(self, "_attn_implementation", None) is None:
+            self._attn_implementation = "eager"
 
     @classmethod
     def from_pretrained(cls, pretrained_model_name_or_path: Union[str, os.PathLike], **kwargs) -> "PretrainedConfig":
@@ -230,6 +232,8 @@ class CLIPVisionConfig(PretrainedConfig):
         self.num_mel_bins = num_mel_bins  ################
         self.target_length = target_length  ################
         self.video_decode_backend = video_decode_backend  ################
+        if getattr(self, "_attn_implementation", None) is None:
+            self._attn_implementation = "eager"
 
     @classmethod
     def from_pretrained(cls, pretrained_model_name_or_path: Union[str, os.PathLike], **kwargs) -> "PretrainedConfig":
@@ -411,7 +415,6 @@ class LanguageBindVideoConfig(PretrainedConfig):
         output["vision_config"] = self.vision_config.to_dict()
         output["model_type"] = self.__class__.model_type
         return output
-
 
 
 
