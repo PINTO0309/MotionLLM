@@ -325,7 +325,9 @@ def main(
         pre = torch.cat((tokenizer.encode(prefix.split('INPUT_VIDEO: ')[0] + "\n", bos=True, eos=False, device=model.device).view(1, -1), tokenizer.encode("INPUT_VIDEO: ", bos=False, eos=False, device=model.device).view(1, -1)), dim=1)
 
         prompt = (pre, ". ASSISTANT: ")
-        encoded = (prompt[0], video_feature[0], tokenizer.encode(prompt[1], bos=False, eos=False, device=model.device).view(1, -1))
+        suffix_tokens = tokenizer.encode(prompt[1], bos=False, eos=False, device=model.device).view(1, -1)
+        encoded = (prompt[0], video_feature[0], suffix_tokens)
+        prompt_len = encoded[0].size(1) + encoded[1].size(0) + encoded[2].size(1)
 
         
         print("[3/3] Generating response...", file=sys.stderr)
@@ -341,8 +343,8 @@ def main(
             eos_id=tokenizer.eos_id,
             tokenizer = tokenizer,
         )
-        outputfull = tokenizer.decode(output_seq)
-        output = outputfull.split("ASSISTANT:")[-1].strip()
+        generated = output_seq[prompt_len:] if output_seq.numel() > prompt_len else output_seq
+        output = tokenizer.decode(generated).strip()
         print(f"[3/3] Done in {time.perf_counter() - t0:.2f}s", file=sys.stderr)
         print("================================")
         print("Model output", output)
