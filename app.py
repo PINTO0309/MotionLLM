@@ -3,6 +3,8 @@ import subprocess
 
 import torch
 import gradio as gr
+from gradio import processing_utils as gradio_processing_utils
+from gradio_client import utils as gradio_client_utils
 from fastapi import FastAPI
 import os
 from PIL import Image
@@ -40,6 +42,32 @@ from tqdm import tqdm
 from models.multimodal_encoder.builder import build_image_tower, build_video_tower
 from models.multimodal_projector.builder import build_vision_projector
 
+
+def _patch_gradio_file_urls():
+    """Ensure Gradio file URLs are absolute (leading slash) across versions."""
+    def add_root_url_patched(data, root_url: str, previous_root_url: str | None):
+        def _add_root_url(file_dict: dict):
+            url = file_dict.get("url")
+            if isinstance(url, str) and url and not url.startswith(("http://", "https://", "/")):
+                url = f"/{url}"
+                file_dict["url"] = url
+            if previous_root_url and isinstance(url, str) and url.startswith(previous_root_url):
+                file_dict["url"] = url[len(previous_root_url) :]
+                return file_dict
+            if isinstance(url, str) and gradio_client_utils.is_http_url_like(url):
+                return file_dict
+            if isinstance(url, str):
+                file_dict["url"] = f"{root_url}{file_dict['url']}"
+            return file_dict
+
+        return gradio_client_utils.traverse(
+            data, _add_root_url, gradio_client_utils.is_file_obj_with_url
+        )
+
+    gradio_processing_utils.add_root_url = add_root_url_patched
+
+
+_patch_gradio_file_urls()
 
 title_markdown = ("""<div class="embed_hidden" style="text-align: center;">
     <h1>MotionLLM: Understanding Human Behaviors from Human Motions and Videos</h1>
