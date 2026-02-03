@@ -12,6 +12,7 @@ import uvicorn
 from transformers import TextStreamer
 
 import hashlib
+import inspect
 import os
 import sys
 import time
@@ -641,10 +642,25 @@ with gr.Blocks(title='MotionLLM', theme=gr.themes.Default(), css=block_css) as d
             )
 
         with gr.Column(scale=7):
-            try:
-                chatbot = gr.Chatbot(label="MotionLLM", bubble_full_width=True).style(height=875)
-            except TypeError:
-                chatbot = gr.Chatbot(label="MotionLLM").style(height=875)
+            def _make_chatbot(label: str, height: int):
+                kwargs = {"label": label}
+                try:
+                    sig = inspect.signature(gr.Chatbot)
+                    if "bubble_full_width" in sig.parameters:
+                        kwargs["bubble_full_width"] = True
+                    if "height" in sig.parameters:
+                        kwargs["height"] = height
+                except (TypeError, ValueError):
+                    pass
+                chatbot = gr.Chatbot(**kwargs)
+                if hasattr(chatbot, "style"):
+                    try:
+                        chatbot = chatbot.style(height=height)
+                    except Exception:
+                        pass
+                return chatbot
+
+            chatbot = _make_chatbot("MotionLLM", 875)
             with gr.Row():
                 with gr.Column(scale=8):
                     textbox.render()
