@@ -641,7 +641,10 @@ with gr.Blocks(title='MotionLLM', theme=gr.themes.Default(), css=block_css) as d
             )
 
         with gr.Column(scale=7):
-            chatbot = gr.Chatbot(label="MotionLLM", bubble_full_width=True).style(height=875)
+            try:
+                chatbot = gr.Chatbot(label="MotionLLM", bubble_full_width=True).style(height=875)
+            except TypeError:
+                chatbot = gr.Chatbot(label="MotionLLM").style(height=875)
             with gr.Row():
                 with gr.Column(scale=8):
                     textbox.render()
