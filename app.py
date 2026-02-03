@@ -486,8 +486,11 @@ if not os.path.exists("temp"):
     os.makedirs("temp")
 
 lora_path = Path(args.lora_path)
-pretrained_llm_path = Path(f"./checkpoints/vicuna-7b-v1.5/lit_model.pth")
-tokenizer_llm_path = Path("./checkpoints/vicuna-7b-v1.5/tokenizer.model")
+primary_ckpt_dir = Path("./checkpoints/vicuna-7b-v1.5")
+fallback_ckpt_dir = Path("./checkpoints/lmsys/vicuna-7b-v1.5")
+checkpoint_dir = primary_ckpt_dir if primary_ckpt_dir.exists() else fallback_ckpt_dir
+pretrained_llm_path = checkpoint_dir / "lit_model.pth"
+tokenizer_llm_path = checkpoint_dir / "tokenizer.model"
 
 # assert lora_path.is_file()
 assert pretrained_llm_path.is_file()
@@ -508,7 +511,7 @@ t0 = time.time()
 with EmptyInitOnDevice(
     device=fabric.device, dtype=dtype, quantization_mode=quantize
 ), lora(r=args.lora_r, alpha=args.lora_alpha, dropout=args.lora_dropout, enabled=True):
-    checkpoint_dir = Path("checkpoints/vicuna-7b-v1.5")
+    checkpoint_dir = checkpoint_dir
     lora_query = True
     lora_key = False
     lora_value = True
