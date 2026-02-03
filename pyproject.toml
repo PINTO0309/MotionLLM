@@ -6,7 +6,8 @@ readme = "README.md"
 requires-python = "==3.10.17"
 dependencies = [
     "litgpt[extra]==0.5.12",
-    "gradio==3.37.0",
+    "gradio-client==2.0.3",
+    "gradio==6.5.1",
     "huggingface_hub==0.34.6",
     "imageio==2.13.5",
     "jsonargparse==4.41.0",

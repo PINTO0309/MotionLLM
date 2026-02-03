@@ -67,7 +67,7 @@ We provide a simple online [demo](https://demo.humotionx.com/) for you to try Mo
 ### Step 1: Set up the environment
 
 ```bash
-uv sync --extra-index-url https://download.pytorch.org/whl/cu128
+uv sync --extra-index-url https://download.pytorch.org/whl/cu128 --index-strategy unsafe-best-match
 source .venv/bin/activate
 ```
 
